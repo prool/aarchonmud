@@ -2,7 +2,8 @@ BIN_DIR := ../bin
 OBJ_DIR := ../obj
 
 CC      = gcc
-PROF    = -I$(AARCHON_INC) -L$(AARCHON_LIB) -O2
+# path to lua add to prool
+PROF    = -I$(AARCHON_INC) -L$(AARCHON_LIB) -O2 -I/usr/include/lua5.1
 MKTIME	:= \""$(shell date)"\"
 BRANCH	:= \""$(shell git branch)"\"
 PARENT	:= \""$(shell git rev-parse HEAD)"\"
@@ -13,7 +14,9 @@ ifndef ARC_C_FLAGS
 	ARC_C_FLAGS =
 endif
 ifndef ARC_L_FLAGS
-	ARC_L_FLAGS = -llua
+# by prool:
+#	ARC_L_FLAGS = -llua
+	ARC_L_FLAGS = /usr/lib/x86_64-linux-gnu/liblua5.1-c++.so
 endif
 
 
@@ -35,10 +38,12 @@ endif
 CPP_WARN = $(BASE_WARN) \
 	-pedantic -Wctor-dtor-privacy -Wformat=2 -Wmissing-declarations -Wold-style-cast \
 	-Woverloaded-virtual -Wredundant-decls -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 \
-	-Wswitch-default -Weffc++ -Werror
+	-Wswitch-default -Weffc++ -Werror \
+	-Wno-error=class-memaccess
+# previous line with c-flag added by prool
 
-
-I_FLAGS_CPP = -I../3rdparty/rapidjson/include
+# path to lua added by prool
+I_FLAGS_CPP = -I../3rdparty/rapidjson/include -I/usr/include/lua5.1
 
 C_FLAGS_BASE = -ggdb -rdynamic $(PROF) $(ARC_C_FLAGS) -DMKTIME=$(MKTIME) -DBRANCH=$(BRANCH) -DPARENT=$(PARENT)
 C_FLAGS_C = $(C_FLAGS_BASE) $(C_WARN) $(MODE_FLAGS)
